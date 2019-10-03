@@ -1,0 +1,241 @@
+# To encode and decode operations
+import json
+
+firmwaredictionary = {
+            ("D52B", "DS120", "DS220"): {
+                "2017-09-08": {
+                    "BMC": {"Version": "3.16.06", "File": "s5bxv3.16.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A08.H2", "File": "3A08.BIN"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed"}
+                },
+                "2018-01-17": {
+                    "BMC": {"Version": "3.74.06", "File": "s5bxv3.74.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H3", "File": "3A10.H3.BIN"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed"}
+                },
+                "2018-02-14": {
+                    "BMC": {"Version": "3.75.06", "File": "s5bxv3.75.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H3", "File": "3A10.H3.BIN"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed"}
+                },
+                "2018-06-19": {
+                    "BMC": {"Version": "4.22.06", "File": "s5bxv4.22.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H3", "File": "3A10.H3.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-07-13": {
+                    "BMC" : {"Version": "4.23.06", "File": "s5bxv4.23.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H7", "File": "3A10.H7.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-08-19": {
+                    "BMC": {"Version": "4.23.06", "File": "s5bxv4.23.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H8", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-08-20": {
+                    "BMC": {"Version": "4.24.06", "File": "s5bxv4.24.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H8", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-10-18": {
+                    "BMC": {"Version": "4.26.06", "File": "s5bxv4.26.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H8", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-12-04": {
+                    "BMC": {"Version": "4.27.06", "File": "s5bxv4.27.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H7", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2019-02-03": {
+                    "BMC": {"Version": "4.27.06", "File": "s5bxv4.27.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3B10.T01", "File": "3B10.T01.BIN_enc"},
+                    #"BIOS": {"Version": "S5BH3B10", "File": "S5BH3B10.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2019-05-28": {
+                    "BMC": {"Version": "4.60.06", "File": "s5bxv4.60.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B13.H01", "File": "S5BH3B13.H01.BIN_enc"},
+                    "CPLD": {"Version": "REV11", "File": "S5B_MB_CPLD_REV11.jed_enc"}
+                },
+                "2019-06-25": {
+                    "BMC": {"Version": "4.61.06", "File": "s5bxv4.61.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B14.T00", "File": "S5BH3B14.T00.BIN_enc"},
+                    "CPLD": {"Version": "REV11", "File": "S5B_MB_CPLD_REV11.jed_enc"}
+                },
+                "2019-07-26": {
+                    "BMC": {"Version": "4.62.06", "File": "s5bxv4.62.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B14.H01", "File": "S5BH3B14.H01.BIN_enc"},
+                    "CPLD": {"Version": "REV11", "File": "S5B_MB_CPLD_REV11.jed_enc"}
+                }
+            },
+            ("D52BV", "DS225"): {
+                "2018-07-30": {
+                    "BMC" : {"Version": "4.23.06", "File": "s5bxv4.23.06_rom.ima_enc"},
+                    "BIOS" : {"Version": "3A10.H8", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-08-19": {
+                    "BMC": {"Version": "4.24.06", "File": "s5bxv4.23.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H8", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-08-20": {
+                    "BMC": {"Version": "4.24.06", "File": "s5bxv4.24.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H8", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2018-10-18": {
+                    "BMC": {"Version": "4.26.06", "File": "s5bxv4.26.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A10.H8", "File": "3A10.H8.BIN_enc"},
+                    "CPLD": {"Version": "REV10", "File": "S5B_MB_CPLD_REV10.jed_enc"}
+                },
+                "2019-05-06": {
+                    "BMC": {"Version": "4.57.06", "File": "s5bxv4.57.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B13.H0", "File": "S5BH3B13.H00.BIN_enc"},
+                    "CPLD": {"Version": "REV11", "File": "S5B_MB_CPLD_REV11.jed_enc"}
+                },
+                "2019-05-28": {
+                    "BMC": {"Version": "4.60.06", "File": "s5bxv4.60.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B13.H01", "File": "S5BH3B13.H01.BIN_enc"},
+                    "CPLD": {"Version": "REV11", "File": "S5B_MB_CPLD_REV11.jed_enc"}
+                },
+                "2019-07-26": {
+                    "BMC": {"Version": "4.62.06", "File": "s5bxv4.62.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B14.H01", "File": "S5BH3B14.H01.BIN_enc"},
+                    "CPLD": {"Version": "REV11", "File": "S5B_MB_CPLD_REV11.jed_enc"}
+                }
+            },
+            ("Q72D", "DS240"): {
+                "2018-05-11": {
+                    "BMC": {"Version": "3.88.06", "File": "s7dhxv3.88.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A01.H3", "File": "3A01.H3.BIN"},
+                },
+                "2018-06-19": {
+                    "BMC": {"Version": "4.22.06", "File": "s7dhxv4.22.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A01.H3", "File": "3A01.H3.BIN_enc"},
+                },
+                "2018-07-13": {
+                    "BMC": {"Version": "4.23.06", "File": "s7dhxv4.23.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A02.H1", "File": "3A02.H1.BIN_enc"}
+                },
+                "2018-08-20": {
+                    "BMC": {"Version": "4.23.06", "File": "s7dhxv4.23.06_rom.ima_enc"},
+                    "BIOS": {"Version": "3A02.H2", "File": "3A02.H2.BIN_enc"}
+                },
+                "2019-05-06": {
+                    "BMC": {"Version": "4.57.06", "File": "s5bxv4.57.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B13.H0", "File": "S5BH3B13.H00.BIN_enc"}
+                },
+                "2019-05-28": {
+                    "BMC": {"Version": "4.60.06", "File": "s5bxv4.60.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S7DH3B13.H01", "File": "S7DH3B13.H01.BIN_enc"}
+                },
+                "2019-07-26": {
+                    "BMC": {"Version": "4.62.06", "File": "s5bxv4.62.06_rom.ima_enc"},
+                    "BIOS": {"Version": "S5BH3B14.H01", "File": "S5BH3B14.H01.BIN_enc"},
+                    "CPLD": {"Version": "REV11", "File": "S5B_MB_CPLD_REV11.jed_enc"}
+                }
+            },
+            ("AVAGO_MegaRAID_SAS_9460-16i"): {
+                "2017-12-17": {"Version": "5.040.00-1123", "File": "50.4.0-0919_9460-16i_SAS_MR_FW_IMAGE.zip"},
+                "2018-05-31": {"Version": "5.060.00-1455", "File": "50.6.0-1375_9460-16i_SAS_MR_FW_IMAGE.zip"}
+            },
+            ("AVAGO_MegaRAID_SAS_PCI_Express_ROMB-QS-3516B"): {
+                "2017-09-14": {"Version": "5.020.00-0910", "File": "QS3516-16i_FW_Online_8B00_5.020.00-0910"},
+                "2018-01-11": {"Version": "5.040.00-1123",
+                               "File": "QS-3516B-16i-R6-PD32-2G_FW-Online_5.040.00-1123.zip"},
+                "2018-02-28": {"Version": "5.050.00-1304",
+                               "File": "QS-3516B-16i-R6-PD32-4G_FW-Online_5.050.00-1304.zip"}
+            },
+            ("Emulex_LPe31002-M6", "Emulex_LPe32002-M2"): {
+                "2016-10-14": {"Version": "11.1.212.0", "File": "lancerg6_A11.1.212.0.grp"},
+                "2017-03-13": {"Version": "11.2.156.27", "File": "lancerg6_A11.2.156.27.grp"},
+                "2017-09-08": {"Version": "11.4.142.23", "File": "lancerg6_A11.4.142.23.grp"},
+                "2018-02-06": {"Version": "11.4.204.25", "File": "lancerg6_A11.4.204.25.grp"},
+                "2018-07-05": {"Version": "12.0.193.13", "File": "lancerg6_A12.0.193.13.grp"},
+            },
+            ("Intel(R)_Ethernet_Connection_X722_for_10GbE_SFP+"): {
+                "2018-02-23": {"Version": "3.45",
+                               "File": "ON 10GbE X722-X527-DA4 SFP plus_FW-Online-Auto_Linux_0004.zip"},
+                "2018-12-20": {"Version": "4.00", "File": "2018_WW46_LBG_X722_NUP_UEFI_v0006.zip"}
+            },
+            ("Intel(R)_Ethernet_Network_Adapter_XXV710-2"): {
+                "2017-11-30": {"Version": "6.01", "File": "XL710_NVMUpdatePackage_v6_01_Linux.tar.gz"},
+                "2019-03-18": {"Version": "6.80", "File": "XL710_NVMUpdatePackage_v6_80_Linux.tar.gz"},
+            },
+            ("LSI_SAS9305-16i"): {
+                "2017-05-03": {"Version": "15.00.00.00", "File": "9305_16i_Package_P15.zip"}
+            },
+            ("LSI_QS3216"): {
+                "2017-06-14": {"Version": "15.00.00.00", "File": "Qfw_1A14.zip"},
+                "2017-08-18": {"Version": "15.00.02.00", "File": "Qfw_1A17.zip"},
+                "2019-05-30": {"Version": "15.00.00.00_0530", "File": "Qfw_1A14_0530.zip"}
+            },
+            ("MCX4121A-ACA_Ax"): {
+                "2017-03-17": {"Version": "14.18.2000",
+                               "File": "fw-ConnectX4Lx-rel-14_18_2000-MCX4121A-ACA_Ax-FlexBoot-3.5.110.bin.zip"},
+                "2017-06-29": {"Version": "14.20.1010",
+                               "File": "fw-ConnectX4Lx-rel-14_20_1010-MCX4121A-ACA_Ax-FlexBoot-3.5.210.bin.zip"},
+                "2017-12-04": {"Version": "14.21.2010",
+                               "File": "fw-ConnectX4Lx-rel-14_21_2010-MCX4121A-ACA_Ax-FlexBoot-3.5.305.bin.zip"},
+                "2018-03-01": {"Version": "14.22.1002",
+                               "File": "fw-ConnectX4Lx-rel-14_22_1002-MCX4121A-ACA_Ax-UEFI-14.15.19-FlexBoot-3.5.403.bin.zip"},
+                "2018-07-12": {"Version": "14.23.1020",
+                               "File": "fw-ConnectX4Lx-rel-14_23_1020-MCX4121A-ACA_Ax-UEFI-14.16.17-FlexBoot-3.5.504.bin.zip"},
+                "2018-12-02": {"Version": "14.24.1000",
+                               "File": "fw-ConnectX4Lx-rel-14_24_1000-MCX4121A-ACA_Ax-UEFI-14.17.11-FlexBoot-3.5.603.bin.zip"}
+            },
+            ("Quanta_S5B_CX4Lx_25G_2P"): {
+                "2017-04-07": {"Version": "14.18.1000", "File": "3GS5BMA0000_MLX_25G_dual_port_14_18_1000_Online.zip"},
+                "2018-02-03": {"Version": "14.20.1010", "File": "3GS5BMA0000_MLX_25G_dual_port_14_20_1010_Online.zip"},
+                "2019-05-31": {"Version": "14.23.1020",
+                               "File": "3GS5BMA0000_MLX_25G_dual_port_Online_Auto_Linux_14.23.1020.zip"}
+            },
+            ("MCX516A-CCA_Ax"): {
+                "2018-07-13": {"Version": "14.23.1020",
+                               "File": "fw-ConnectX5-rel-16_23_1020-MCX516A-CCA_Ax-UEFI-14.16.17-FlexBoot-3.5.504.bin.zip"},
+                "2018-12-02": {"Version": "14.24.1000",
+                               "File": "fw-ConnectX5-rel-16_24_1000-MCX516A-CCA_Ax-UEFI-14.17.11-FlexBoot-3.5.603.bin.zip"}
+            }
+        }
+
+vmwaredictionary = {
+            "2019-08-05_UCPv20190805_6.5U2": {
+                "ESXI_Version": "6.5U2",
+                "ESXI_Build": "13635690",
+                "Nodes": {
+                    "D52B": "2019-07-26",
+                    "DS120": "2019-07-26",
+                    "DS220": "2019-07-26",
+                    "D52BV": "2019-07-26",
+                    "DS225": "2019-07-26",
+                    "Q72D": "2019-05-28",
+                    "DS240": "2019-05-28"
+                },
+                "IOCards": {
+                    "AVAGO_MegaRAID_SAS_9460-16i": "2017-12-17",
+                    "AVAGO_MegaRAID_SAS_PCI_Express_ROMB-QS-3516B": "2018-01-11",
+                    "Emulex_LPe31002-M6": "2018-07-05",
+                    "Emulex_LPe32002-M2": "2018-07-05",
+                    "Intel(R)_Ethernet_Connection_X722_for_10GbE_SFP+": "2018-02-23",
+                    "Intel(R)_Ethernet_Network_Adapter_XXV710-2": "2017-11-30",
+                    "LSI_SAS9305-16i": "2017-05-03",
+                    "LSI_QS3216": "2019-05-30",
+                    "MCX4121A-ACA_Ax": "2018-07-12",
+                    "Quanta_S5B_CX4Lx_25G_2P": "2019-05-31",
+                    "MCX516A-CCA_Ax": "2018-07-13"
+                }
+        }
+}
+
+x = json.dumps(vmwaredictionary)
+y = json.loads(x)
+print(y)
+
+
+# when performing from a file in disk
+with open("any_file.json", "w") as readit:
+    json.dump(vmwaredictionary, readit)
+
