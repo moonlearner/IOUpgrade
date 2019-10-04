@@ -321,7 +321,7 @@ class minios(object):
                     if 'Emulex' in line:
                         print(self.node.host + ' Found a Emulex HBA')
                         # Jenny Modified on 9/19/2019
-                        #self.PCIDevices.update({busdevID: emulexHBA(self, busdevID)})
+                        self.PCIDevices.update({busdevID: emulexHBA(self, busdevID)})
                 elif 'Serial Attached SCSI' in line:
                     if 'LSI' in line:
                         print(self.node.host + ' Found a LSI SAS Card')
@@ -891,13 +891,53 @@ class emulexHBA(HBA):
     def __init__(self, minios_instance, pciloc):
         HBA.__init__(self, minios_instance, pciloc)
         self.hbacmd = "sudo hbacmd "
+        self.systool = "systool -c fc_host -v "
         self.elxflash = "sudo elxflash.sh "
-        #self.linlpcfg = "sudo linlpcfg.sh "
-        self.linlpcfg = "sudo linlpcfg "
+        self.linlpcfg = "sudo linlpcfg.sh "
+        #self.linlpcfg = "sudo linlpcfg "
         self.hbacmdlisthbadict = {}
         while self.name is None and self.firmware is None:
             self.getDetails()
 
+    def getDetails(self):
+        cmd_symbolic  = self.systool + '| grep symbolic_name'
+        cmd_portwwn  = self.systool + '| grep port_name'
+        output = self.minios.apprun2(cmd_symbolic)
+        output = output.splitlines()
+        dictionarytemp = {}
+        # PCI Location in integers
+        location = str(int(self.busdevID[:2],16))
+        # Get the WWNs assocated to the card
+        for line in output:
+            lines = line.split(' = ')
+            if len(lines) > 1:
+                dictionarytemp.update({lines[0].strip():lines[1].strip()})
+        for key, value in dictionarytemp.items():
+            print("The key is: ", key)
+            print("The value is: ", value)
+            values = value.split(' ')
+            self.name = 'Emulex_' + values[1]
+            self.firmware = values[2]
+            #break
+        # Set WWNs to List
+        output = self.minios.apprun2(cmd_portwwn)
+        output = output.splitlines()
+        dictionarytemp2 = {}
+        # Get the WWNs assocated to the card
+        for line in output:
+            lines = line.split(' = ')
+            if len(lines) > 1:
+                dictionarytemp2.update({lines[0].strip():lines[1].strip()})
+        for key, value in dictionarytemp2.items():
+            print("The WWN key is: ", key)
+            print("The WWN value is: ", value)
+            self.WWN_key = value.upper()
+            self.WWN_key = self.WWN_key[3:11] + ' ' + self.WWN_key[11:18]
+            print(self.WWN_key)
+            break
+
+        return False
+    '''
     def getDetails(self):
         cmd = self.hbacmd + 'listhba'
         # Jenny Modified on 9/19/2019
@@ -947,7 +987,7 @@ class emulexHBA(HBA):
                 pass
 
         return None
-
+        '''
     def flash(self, file):
         # Clear Tmp Folder
         cmd = 'sudo rm -rf /tmp/*'
@@ -959,19 +999,25 @@ class emulexHBA(HBA):
         cmd = "sudo cp " + file + " /tmp"
         # Jenny Modified on 9/19/2019
         #self.minios.apprun(cmd, 120)
-        self.minios.apprun2(cmd, 120)
+        self.minios.apprun2(cmd)
         # Get HBA Number
         cmd = self.linlpcfg + 'listHBA'
         # Jenny Modified on 9/19/2019
         #output = self.minios.apprun(cmd)
         output = self.minios.apprun2(cmd)
         output = output.splitlines()
+        print(output)
         # Get first WWN of HBA and format to meet linlpcfg standards
-        WWN_key = self.WWNs[0].replace(":","").upper()
-        WWN_key = WWN_key[:8] + ' '+ WWN_key[8:]
+        #WWN_key = self.WWNs[0].replace(":","").upper()
+        #WWN_key = WWN_key[:8] + ' '+ WWN_key[8:]
         adapternumber = None
+        print("==================")
+        print(self.WWN_key)
+        print("==================")
         for line in output:
-            if WWN_key in line:
+            print(line)
+            if self.WWN_key in line:
+                print("Catched line: ", line)
                 adapternumber = line.split()[1].split(':')[0]
         if adapternumber is not None:
             print(self.minios.node.host + ' Flashing ' + self.name)
@@ -985,7 +1031,7 @@ class emulexHBA(HBA):
         #print(self.minios.node.host + ' Failed to Flash ' + self.name + ' \nDebugging output: ' + output)
         # Jenny Add 9/6/2019
         print("Failed to Flash Emulex Card")
-        print(output)
+        #print(output)
 
         return False
 

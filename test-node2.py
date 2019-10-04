@@ -10,7 +10,7 @@ test = minios.minios(node)
 #test.login()
 test.discoverPCIDevices2()
 founddevices = test.printPCIDevices()
-
+'''
 #print("=================Starting to Upgrade==========================")
 #pcitest = minios.intelNIC(test, '3d:00')
 #pcitest.flash("/cdrom/firmware/Intel(R)_Ethrnet_Connection_X722_for_10GbE_SFP+/ON 10GbE X722-X527-DA4 SFP plus_FW-Online-Auto_Linux_0004.zip")
@@ -100,11 +100,9 @@ for device2, pciclass2 in founddevices.items():
              pciclass2.SSID])
 #print(t)
 
-'''
 #print("=================Starting to Upgrade==========================")
-emulextest = minios.emulexHBA(test,'86:00')
+emulextest = minios.emulexHBA(test,'18:00')
 emulextest.flash('/cdrom/firmware/Emulex_LPe31002-M6/lancerg6_A11.4.204.25.grp')
-
 
 melltext = minios.mellanoxNIC(test, '3b:00')
 melltext.flash('/cdrom/firmware/Quanta_S5B_CX4Lx_25G_2P/3GS5BMA0000_MLX_25G_dual_port_14_20_1010_Online.zip')
