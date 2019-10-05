@@ -898,8 +898,44 @@ class emulexHBA(HBA):
         self.hbacmdlisthbadict = {}
         while self.name is None and self.firmware is None:
             self.getDetails()
-
+    
+    # Jenny Updated this code on 10/04/2019
     def getDetails(self):
+        output = self.minios.apprun2(self.systool)
+        output = output.splitlines()
+        dictionarytemp = {}
+        # PCI Location in integers
+        location = str(int(self.busdevID[:2],16))
+        # Get the WWNs assocated to the card
+        for line in output:
+            lines = line.split(' = ')
+            if len(lines) > 1:
+                dictionarytemp.update({lines[0].strip():lines[1].strip()})
+            else:
+                # If a blank line is found and port_name is in the dictionarytemp, add dictionarytemp to main listhbadict
+                if '' is line and 'port_name' in dictionarytemp.keys():
+                    self.hbacmdlisthbadict.update({dictionarytemp.get('port_name'):dictionarytemp})
+                    dictionarytemp = {}
+
+        # Set WWNs to List
+        self.WWNs = list(self.hbacmdlisthbadict)
+        self.WWN_key = self.WWNs[1].upper()
+        self.WWN_key = self.WWN_key[3:11] + ' ' + self.WWN_key[11:19]
+        print('&&&&& The Port WWWN is {} &&&&& '.format(self.WWN_key))
+        
+        # Set name and firmware details
+        for WWN in self.hbacmdlisthbadict.keys():
+            self.symbolic_name = self.hbacmdlisthbadict[WWN].get('symbolic_name')
+            values = self.symbolic_name.split(' ')
+            self.name = 'Emulex_' + values[1]
+            self.firmware = values[2]
+            break
+
+        return False
+
+    '''
+   # Jenny Updated this code on 10/03/2019
+   def getDetails(self):
         cmd_symbolic  = self.systool + '| grep symbolic_name'
         cmd_portwwn  = self.systool + '| grep port_name'
         output = self.minios.apprun2(cmd_symbolic)
@@ -937,7 +973,7 @@ class emulexHBA(HBA):
             break
 
         return False
-    '''
+    
     def getDetails(self):
         cmd = self.hbacmd + 'listhba'
         # Jenny Modified on 9/19/2019
@@ -988,6 +1024,7 @@ class emulexHBA(HBA):
 
         return None
         '''
+
     def flash(self, file):
         # Clear Tmp Folder
         cmd = 'sudo rm -rf /tmp/*'
